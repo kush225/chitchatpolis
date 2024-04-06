@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from ..models import FriendRequest, User
+from ..models import FriendRequest, Friend, User
 from rest_framework_simplejwt.tokens import AccessToken
 
 
@@ -19,6 +19,8 @@ class ListFriendsAPITestCase(APITestCase):
         self.friend2 = User.objects.create_user(email="friend2@example.com", name='friend2', password='Password@123')
         FriendRequest.objects.create(sender=self.user, receiver=self.friend1, status='accepted')
         FriendRequest.objects.create(sender=self.friend2, receiver=self.user, status='accepted')
+        Friend.objects.create(user1=self.user, user2=self.friend1)
+        Friend.objects.create(user1=self.user, user2=self.friend2)
 
         self.token = str(AccessToken.for_user(self.user))
 
@@ -29,7 +31,7 @@ class ListFriendsAPITestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
         response = self.client.get(reverse('friend'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data['count'], 2)
 
     def test_auth_list_friend(self):
         """

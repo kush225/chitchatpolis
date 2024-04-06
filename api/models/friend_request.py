@@ -6,7 +6,6 @@ from .user import User
 STATUS_CHOICES: Tuple[str, str] = (
     ('pending', 'Pending'),
     ('accepted', 'Accepted'),
-    ('rejected', 'Rejected'),
 )
 
 class FriendRequest(models.Model):

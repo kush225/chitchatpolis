@@ -46,8 +46,8 @@ class FriendRequestDetailAPITestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
         friend_request = FriendRequest.objects.create(sender=self.sender, receiver=self.receiver)
         url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
-        response = self.client.put(url, data={'status': 'accepted'})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         friend_request.refresh_from_db()
         self.assertEqual(friend_request.status, 'accepted')
 
@@ -58,10 +58,8 @@ class FriendRequestDetailAPITestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
         friend_request = FriendRequest.objects.create(sender=self.sender, receiver=self.receiver)
         url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
-        response = self.client.put(url, data={'status': 'rejected'})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        friend_request.refresh_from_db()
-        self.assertEqual(friend_request.status, 'rejected')
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_pending_friend_request(self):
         """
@@ -76,6 +74,28 @@ class FriendRequestDetailAPITestCase(APITestCase):
         response = self.client.get(reverse('friend_requests'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
+
+    def test_accepting_other_user_friend_request(self):
+        """
+        Test accepting a friend request from another user credentials.
+        """
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+        friend1 = User.objects.create_user(email="friend1@example.com", name='friend1', password='Password@123')
+        friend_request = FriendRequest.objects.create(sender=friend1, receiver=self.receiver)
+        url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
+        response = self.client.patch(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_rejecting_other_user_friend_request(self):
+        """
+        Test rejecting a friend request from another user credentials.
+        """
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+        friend1 = User.objects.create_user(email="friend1@example.com", name='friend1', password='Password@123')
+        friend_request = FriendRequest.objects.create(sender=friend1, receiver=self.receiver)
+        url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_max_friend_requests_per_minute(self):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
@@ -98,13 +118,22 @@ class FriendRequestDetailAPITestCase(APITestCase):
         response = self.client.post(url, data={'receiver_id': self.receiver.id})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_auth_update_friend_request(self):
+    def test_auth_accepting_friend_request(self):
         """
-        Test updating a friend request without authentication.
+        Test accepting a friend request without authentication.
         """
         friend_request = FriendRequest.objects.create(sender=self.sender, receiver=self.receiver)
         url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
-        response = self.client.post(url, data={'receiver_id': self.receiver.id})
+        response = self.client.patch(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_auth_rejecting_friend_request(self):
+        """
+        Test accepting a friend request without authentication.
+        """
+        friend_request = FriendRequest.objects.create(sender=self.sender, receiver=self.receiver)
+        url = reverse('friend_request_detail', kwargs={'request_id': friend_request.id})
+        response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_auth_list_friend_request(self):

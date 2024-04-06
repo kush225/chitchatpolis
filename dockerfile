@@ -18,14 +18,6 @@ COPY . /app/
 # Run tests
 RUN python manage.py test
 
-# Run migrations
-RUN python manage.py migrate
-
-RUN export DJANGO_SETTINGS_MODULE=chitchatpolis.settings
-
-# # Run script to add 1000 random users
-# RUN python scripts/add_users.py
-
 RUN chmod +x entrypoint.sh
 
 # Set entrypoint

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Run migrations
+echo "Running migrations..."
+echo "---------------------------------"
+python manage.py migrate
+
 if [ "$DEBUG" = "true" ]; then
     echo "DEBUG mode is enabled. Adding test users..."
     # Run management command to populate users
@@ -12,4 +17,4 @@ echo "Starting server..."
 echo "---------------------------------"
 
 # Start Django server using Gunicorn
-gunicorn --bind 0.0.0.0:8000 chitchatpolis.wsgi:application
+python manage.py runserver 0.0.0.0:8000

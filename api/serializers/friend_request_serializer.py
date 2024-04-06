@@ -22,8 +22,8 @@ class FriendRequestUpdateSerializer(serializers.ModelSerializer):
         """
         Validates the status field.
         """
-        if value not in [STATUS_CHOICES[1][0], STATUS_CHOICES[2][0]]:
-            raise ValidationError('Status must be either "accepted" or "rejected".')
+        if value not in (STATUS_CHOICES[0][0], STATUS_CHOICES[1][0]):
+            raise ValidationError('Not acceptable status value')
         return value
 
     class Meta:

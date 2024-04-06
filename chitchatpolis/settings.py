@@ -25,9 +25,9 @@ AUTH_USER_MODEL = 'api.User'
 SECRET_KEY = 'django-insecure-m_*68tid(st-!y%&a1-sy&33&73*adi$ktewtybnsx(vbndaf0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not os.getenv("DEBUG", False) 
+DEBUG = os.getenv("DEBUG", True) 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -149,10 +149,14 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'debug.log'),
         },
+        'console': {
+            'level': 'INFO',
+            "class": "logging.StreamHandler",
+        }
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['file', 'console'],
             'level': 'DEBUG',
             'propagate': True,
         },

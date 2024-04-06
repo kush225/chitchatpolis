@@ -13,8 +13,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         count = kwargs['count']
-        for _ in range(count):
-            name = ''.join(random.choices(string.ascii_lowercase, k=8))
+        for i in range(1,count):
+            name = f'test{i}'
             email = f'{name}@example.com'
             password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
             User.objects.create_user(name=name, email=email, password=password)

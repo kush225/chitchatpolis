@@ -14,15 +14,8 @@ class UserSearchTestCase(APITestCase):
         self.user = User.objects.create_user(email='test@example.com', name='Test', password='Password@123')
 
         # Generate access token for the user
-        self.token = self.generate_access_token(self.user)
+        self.token = str(AccessToken.for_user(self.user))
 
-    
-    def generate_access_token(self, user: User):
-        """
-        Helper method to generate access token for a given user.
-        """
-        token = AccessToken.for_user(user)
-        return str(token)
 
     def test_auth(self):
         # Test searching for a user by email
