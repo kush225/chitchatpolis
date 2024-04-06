@@ -21,12 +21,11 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Your API Title",
+        title="Chitchatpolis",
         default_version='v1',
-        description="Your API description",
-        terms_of_service="https://www.example.com/policies/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
-        license=openapi.License(name="BSD License"),
+        description="Next level social networking",
+        terms_of_service="https://www.chitchatpolis.com/policies/terms/",
+        contact=openapi.Contact(email="contact@chitchatpolis.com"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
