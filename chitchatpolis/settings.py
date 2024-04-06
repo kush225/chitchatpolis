@@ -158,3 +158,5 @@ LOGGING = {
         },
     },
 }
+
+MAX_FRIEND_REQUESTS_PER_MINUTE = 3

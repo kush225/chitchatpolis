@@ -4,6 +4,9 @@ from ..models import User
 from ..serializers.user_serializer import UserSerializer
 from ..serializers.user_search_serializer import UserSearchSerializer
 from rest_framework.permissions import IsAuthenticated
+import logging
+
+logger = logging.getLogger(__name__)
 
 class UserSearchView(generics.ListAPIView):
     """
@@ -41,9 +44,11 @@ class UserSearchView(generics.ListAPIView):
 
             # If exact email match exists, return it
             if exact_email_match.exists():
+                logger.info(f"Exact email match found for search keyword: {search_keyword}")
                 return exact_email_match
 
             # If no exact email match, filter users by name containing the search keyword
+            logger.info(f"No exact email match found for search keyword: {search_keyword}. Filtering by name.")
             return queryset.filter(name__icontains=search_keyword)
 
         # If no search keyword provided or not valid, return all users
