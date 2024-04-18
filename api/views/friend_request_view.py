@@ -22,6 +22,11 @@ class FriendRequestListAPIView(generics.ListCreateAPIView):
     serializer_class = FriendRequestSerializer
     throttle_classes = [UserRateThrottle]
 
+    def get_throttles(self):
+        if self.request.method != 'POST':
+            return []
+        return super().get_throttles()
+    
     def get_queryset(self):
         """
         Get the queryset of pending friend requests for the current user.

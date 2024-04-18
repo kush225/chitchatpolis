@@ -41,7 +41,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
     'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
     'DEFAULT_THROTTLE_RATES': {
-        'user': '4/day'
+        'user': '3/min'
     }
 }
 

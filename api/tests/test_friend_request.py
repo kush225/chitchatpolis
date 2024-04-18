@@ -5,6 +5,7 @@ from ..models import FriendRequest, User
 from rest_framework_simplejwt.tokens import AccessToken
 import time
 from django.conf import settings
+from django.core.cache import cache
 
 class FriendRequestDetailAPITestCase(APITestCase):
     """
@@ -18,6 +19,7 @@ class FriendRequestDetailAPITestCase(APITestCase):
         self.sender = User.objects.create_user(email='sender@example.com', name="sender", password='Password@123')
         self.receiver = User.objects.create_user(email='receiver@example.com', name="receiver", password='Password@123')
         self.token = str(AccessToken.for_user(self.sender))
+        cache.clear()
 
     def test_send_friend_request(self):
         """
