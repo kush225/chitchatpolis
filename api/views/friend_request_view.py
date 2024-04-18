@@ -10,6 +10,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.db.models import Q
+from rest_framework.throttling import UserRateThrottle
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ class FriendRequestListAPIView(generics.ListCreateAPIView):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = FriendRequestSerializer
+    throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         """
@@ -43,12 +45,7 @@ class FriendRequestListAPIView(generics.ListCreateAPIView):
                     return Response({"error": "Friend request already sent"}, status=status.HTTP_400_BAD_REQUEST)
                 elif record.status == 'accepted':
                     return Response({"error": "Already a friend"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            
-            recent_requests = FriendRequest.objects.filter(sender=sender, created_at__gte=timezone.now() - timedelta(minutes=1)).count()
-            if recent_requests >= settings.MAX_FRIEND_REQUESTS_PER_MINUTE:
-                return Response({"error": "Rate limit exceeded"}, status=status.HTTP_429_TOO_MANY_REQUESTS)
-            
+
             friend_request = serializer.save(sender=sender)
             logger.info(f"Friend request sent from {sender.email} to {receiver.email}")
             return Response(self.serializer_class(friend_request).data, status=status.HTTP_201_CREATED)
@@ -88,7 +85,7 @@ class FriendRequestDetailAPIView(generics.UpdateAPIView, generics.DestroyAPIView
             return Response(status=status.HTTP_204_NO_CONTENT)
         
 
-    def destroy(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         """
         Delete the friend request.
         """
