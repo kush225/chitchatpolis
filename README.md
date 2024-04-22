@@ -4,7 +4,7 @@ Social Media apis written in python using django-drf.
 
 Functionalities as follows:
 
-• API to search other users by email and name(paginate up to 10 records per page).
+1. API to search other users by email and name(paginate up to 10 records per page).
   
   a) If search keyword matches exact email then return user associated with the
     email.
@@ -14,13 +14,13 @@ Functionalities as follows:
   
   c) There will be only one search keyword that will search either by name or email.
   
-• API to send/accept/reject friend request
+2. API to send/accept/reject friend request
 
-• API to list friends(list of users who have accepted friend request)
+3. API to list friends(list of users who have accepted friend request)
 
-• List pending friend requests(received friend request)
+4. List pending friend requests(received friend request)
 
-• Users can not send more than 3 friend requests within a minute.
+5. Users can not send more than 3 friend requests within a minute.
 
 ## Installation
 
