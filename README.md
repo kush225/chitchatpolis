@@ -6,13 +6,13 @@ Functionalities as follows:
 
 1. API to search other users by email and name(paginate up to 10 records per page).
   
-  a) If search keyword matches exact email then return user associated with the
+  - If search keyword matches exact email then return user associated with the
     email.
   
-  b) If the search keyword contains any part of the name then return a list of all
+  - If the search keyword contains any part of the name then return a list of all
     users.
   
-  c) There will be only one search keyword that will search either by name or email.
+  - There will be only one search keyword that will search either by name or email.
   
 2. API to send/accept/reject friend request
 
